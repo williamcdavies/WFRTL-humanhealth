@@ -1,6 +1,6 @@
 How to use:
 
-Prerequisite:
+Prerequisites:
 - PostgreSQL must be installed and available
 
 For additional info on installing PostgreSQL see https://www.postgresql.org/download/.
