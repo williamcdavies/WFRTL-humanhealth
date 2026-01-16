@@ -1,33 +1,6 @@
-How to use:
+This folder contains the queries to reproduce smokes_places_composite.csv
 
-Prerequisites:
-- PostgreSQL must be installed and available
-
-For additional info on installing PostgreSQL see https://www.postgresql.org/download/.
-
-- A database with name=spatial
-
-For additional info on creating databases see https://www.postgresql.org/docs/current/sql-createdatabase.html.
-
-
-1. Restore `spatial.dump`:
-
-```sh
-pg_restore --no-owner -j 8 -d spatial dumpdir
-```
-
-For additional info on database restoration see https://www.postgresql.org/docs/current/app-pgrestore.html.
-
-
-2. Enter the postgres interactive terminal
-
-```sh
-psql spatial
-```
-
-
-3. Execute the following queries in order:
-
+Query 1: Builds XREF dataset
 ```sql
 CREATE TEMP TABLE xref AS (
     SELECT
@@ -51,7 +24,7 @@ CREATE TEMP TABLE xref AS (
         )
 );
 ```
-
+Query 2: Builds XREF_EXPANDED dataset (depends upon XREF)
 ```sql
 CREATE TEMP TABLE xref_expanded AS (
     SELECT
@@ -69,6 +42,7 @@ CREATE TEMP TABLE xref_expanded AS (
 );
 ```
 
+Query 3: Builds XREF_RANKED dataset (depends upon XREF_EXPANDED)
 ```sql
 CREATE TEMP TABLE xref_ranked AS (
     SELECT
@@ -89,6 +63,7 @@ CREATE TEMP TABLE xref_ranked AS (
 );
 ```
 
+Query 4: Builds smokes_places_composite.csv (depends upon XREF_RANKED)
 ```sql
 CREATE TEMP TABLE out AS (
     SELECT
@@ -108,14 +83,3 @@ CREATE TEMP TABLE out AS (
     ORDER BY date
 );
 ```
-
-These queries can also be found in `q.sql`
-
-
-4. Export `out`
-
-```sql
-COPY public.out TO '/some/unique/path/out.csv' CSV HEADER;
-```
-
-For additional info on COPY see https://www.postgresql.org/docs/current/sql-copy.html.
